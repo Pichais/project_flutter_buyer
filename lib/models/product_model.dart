@@ -1,9 +1,9 @@
 class ProductModel {
   //field
-  dynamic name, price, pathimage, detail, user, type, exp, stock;
+  dynamic name, price, pathimage, detail, id, type, exp, stock;
 
   //Method
-  ProductModel(this.name, this.price, this.pathimage, this.detail, this.user,
+  ProductModel(this.name, this.price, this.pathimage, this.detail, this.id,
       this.type, this.exp, this.stock);
 
   ProductModel.fromMap(Map<String, dynamic> map) {
@@ -12,7 +12,7 @@ class ProductModel {
     pathimage = map['image'];
     detail = map['Detail'];
     exp = map['EXP'];
-    user = map['user'];
+    id = map['id'];
     type = map['Type'];
     stock = map['Stock'];
   }

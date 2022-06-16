@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +8,16 @@ import 'package:project_flutter_buyer/utility/my_constant.dart';
 import 'package:project_flutter_buyer/utility/show_image.dart';
 import 'package:project_flutter_buyer/utility/show_title.dart';
 
-class Authen extends StatefulWidget {
-  const Authen({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
   @override
-  _AuthenState createState() => _AuthenState();
+  _LoginState createState() => _LoginState();
 }
 
-class _AuthenState extends State<Authen> {
+class _LoginState extends State<Login> {
   bool statusRedEye = true;
-  var user, password;
+  dynamic user, password;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: const EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => user = value.trim(),
@@ -95,7 +97,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: const EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => password = value.trim(),
@@ -141,7 +143,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.symmetric(vertical: 22),
+          margin: const EdgeInsets.symmetric(vertical: 22),
           width: size * 0.6,
           child: ElevatedButton(
             style: Myconstant().myButtonStyle(),
@@ -152,7 +154,7 @@ class _AuthenState extends State<Authen> {
                 checkAuthen();
               }
             },
-            child: Text('Login'),
+            child: const Text('Login'),
           ),
         ),
       ],
@@ -171,17 +173,18 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Row BuildImage(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
             width: size * 0.60, child: ShowImage(pathImage: Myconstant.image2)),
       ],
     );
   }
 
-  Future<Null> checkAuthen() async {
+  Future<void> checkAuthen() async {
     await Firebase.initializeApp().then((value) async {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: user, password: password)

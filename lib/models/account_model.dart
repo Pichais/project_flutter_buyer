@@ -1,5 +1,6 @@
 class AccountModel {
   //field
+  // ignore: non_constant_identifier_names
   dynamic ID, address, avatar, user, password, name, phone, gender;
 
   //Method

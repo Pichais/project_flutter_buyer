@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:project_flutter_buyer/routes/route.dart';
 import 'package:project_flutter_buyer/utility/my_constant.dart';
 
-String? initlaRoute = '/mainscreen';
+String? initlaRoute = '/authen';
 
-Future<Null> main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp().then((value) async {
-    await FirebaseAuth.instance.authStateChanges().listen((event) {
+    FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event != null) {
         initlaRoute = Myconstant.routeMyservice;
       }
-      runApp(MyApp());
+      runApp(const MyApp());
     });
   });
 }

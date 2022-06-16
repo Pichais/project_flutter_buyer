@@ -6,21 +6,25 @@ class Myconstant {
 
   //Route
   static String routeAuthen = '/authen';
-  static String routeCreateAccount = '/createAccount';
+  static String routeCreateAccount = '/register';
   static String routeMyservice = '/mainscreen';
   static String routeCategory = '/Category';
+  static String routeCart = '/cart';
 
   //image
+  static String shopwall = 'images/shoppingwall.jpg';
   static String image1 = 'images/image01.png';
   static String image2 = 'images/image02.png';
   static String image3 = 'images/image03.png';
   static String image4 = 'images/image04.png';
   static String avata = 'images/avata.png';
   static String photo = 'images/photo1.png';
-  static String catMilk = 'images/cat1.png';
-  static String catEgg = 'images/cat2.png';
-  static String catVeg = 'images/cat3.png';
-  static String catOther = 'images/cat4.png';
+  static String catMilk = 'images/milk.png';
+  static String catEgg = 'images/eggs.png';
+  static String catVeg = 'images/organic.png';
+  static String catFeed = 'images/feed.png';
+  static String catMeat = 'images/meat.png';
+  static String catOther = 'images/farm.png';
 
   //color
   static Color primary = const Color(0xffffa600);

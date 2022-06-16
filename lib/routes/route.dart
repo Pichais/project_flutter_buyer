@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:project_flutter_buyer/page/authen.dart';
-import 'package:project_flutter_buyer/page/create_account.dart';
+import 'package:project_flutter_buyer/page/bottom_nav_pages/cart.dart';
+import 'package:project_flutter_buyer/page/login/login.dart';
+import 'package:project_flutter_buyer/page/create_account/register_screen.dart';
 import 'package:project_flutter_buyer/page/main_screen.dart';
 import 'package:project_flutter_buyer/page/product_detail.dart';
 
 final Map<String, WidgetBuilder> map = {
-  '/authen': (BuildContext context) => const Authen(),
-  '/createAccount': (BuildContext context) => const Create(),
+  '/authen': (BuildContext context) => const Login(),
+  '/register': (BuildContext context) => const RegistrationScreen(),
   '/mainscreen': (BuildContext context) => const MainScreen(),
   '/product_detail': (BuildContext context) => const ProductDetail(),
+  '/cart': (BuildContext context) => const Cart(),
   // '/Category': (BuildContext context) => Category(),
 };
