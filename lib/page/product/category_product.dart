@@ -18,6 +18,7 @@ class PageCategory extends StatefulWidget {
 class _PageCategoryState extends State<PageCategory> {
   List<ProductModel> productModels = [];
   String nameCate = '';
+  int amounts = 0;
 
   @override
   void initState() {
@@ -28,6 +29,9 @@ class _PageCategoryState extends State<PageCategory> {
   }
 
   Future<void> readAllData(String nameCate) async {
+    if (productModels != 0) {
+      productModels.clear();
+    }
     await Firebase.initializeApp().then((value) async {
       print('**initialize Success***');
       await FirebaseFirestore.instance
@@ -57,6 +61,13 @@ class _PageCategoryState extends State<PageCategory> {
       body: ListView.builder(
           itemCount: productModels.length,
           itemBuilder: (context, index) {
+            dynamic name, price, image, detail, stock, idproduct;
+            idproduct = productModels[index].id;
+            name = productModels[index].name;
+            price = productModels[index].price;
+            image = productModels[index].pathimage;
+            detail = productModels[index].detail;
+            stock = productModels[index].stock;
             if (productModels.isNotEmpty) {
               return Card(
                 child: InkWell(
@@ -64,7 +75,17 @@ class _PageCategoryState extends State<PageCategory> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ShowdetailProduct()));
+                            builder: (context) => ShowdetailProduct(
+                                  name: name,
+                                  price: price,
+                                  detail: detail,
+                                  image: image,
+                                  docsID: idproduct,
+                                  stock: stock,
+                                  callback: () {
+                                    readAllData(nameCate);
+                                  },
+                                )));
                   },
                   child: Row(
                     children: [
@@ -108,7 +129,17 @@ class _PageCategoryState extends State<PageCategory> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  ShowdetailProduct()));
+                                                  ShowdetailProduct(
+                                                    name: name,
+                                                    price: price,
+                                                    detail: detail,
+                                                    image: image,
+                                                    docsID: idproduct,
+                                                    stock: stock,
+                                                    callback: () {
+                                                      readAllData(nameCate);
+                                                    },
+                                                  )));
                                     },
                                     icon: const Icon(
                                       Icons.add_circle_outline_outlined,

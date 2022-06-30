@@ -52,7 +52,18 @@ class _HomeState extends State<Home> {
               items: slideImage
                   .map((item) => InkWell(
                         onTap: () {
-                          print(dotProsition);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Image.network(item),
+                                    ],
+                                  ),
+                                );
+                              });
                         },
                         child: Container(
                           decoration: BoxDecoration(

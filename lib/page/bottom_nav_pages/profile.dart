@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project_flutter_buyer/models/account_model.dart';
-import 'package:project_flutter_buyer/models/product_model.dart';
 import 'package:project_flutter_buyer/utility/my_constant.dart';
 
 class Profile extends StatefulWidget {
@@ -15,8 +14,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   List<AccountModel> userAccounts = [];
-  String? name, email;
-  dynamic urlImage;
+  String? name, email, dob;
+  dynamic urlImage, phonenumber;
   @override
   void initState() {
     readDataUser();
@@ -25,24 +24,22 @@ class _ProfileState extends State<Profile> {
 
   Future<void> readDataUser() async {
     Firebase.initializeApp().then((value) async {
-      await FirebaseAuth.instance.authStateChanges().listen((event) {
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+      var currentUser = _auth.currentUser;
+
+      FirebaseFirestore.instance
+          .collection('User')
+          .doc(currentUser!.email)
+          .snapshots()
+          .forEach((element) {
         setState(() {
-          name = event!.displayName!;
-          email = event.email!;
+          name = element.data()!['name'];
+          email = currentUser.email;
+          urlImage = element.data()!['image'];
+          phonenumber = element.data()!['phone'];
+          dob = element.data()!['dob'];
         });
       });
-      await FirebaseFirestore.instance
-          .collection('User')
-          .snapshots()
-          .listen((event) {
-            for (var snapshot in event.docs) {
-          Map<String, dynamic> map = snapshot.data();
-          AccountModel userAccount = AccountModel.fromMap(snapshot.data());
-          setState(() {
-            userAccounts.add(userAccount);
-          });
-        }
-          });
     });
   }
 
@@ -53,11 +50,16 @@ class _ProfileState extends State<Profile> {
       child: Center(
         child: Column(
           children: [
-            // CircleAvatar(
-            //   backgroundImage: NetworkImage(),
-            // ),
-            name == null ? const Text('') : Text(name!),
-            email == null ? const Text('') : Text(email!),
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircleAvatar(
+                backgroundImage:
+                    urlImage == null ? null : NetworkImage(urlImage),
+              ),
+            ),
+            name == null ? const Text('1') : Text(name!),
+            email == null ? const Text('1') : Text(email!),
             TextButton(
               onPressed: () async {
                 await Firebase.initializeApp().then((value) async {

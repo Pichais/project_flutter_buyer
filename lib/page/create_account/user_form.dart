@@ -1,9 +1,14 @@
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields, empty_catches, avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_flutter_buyer/page/main_screen.dart';
 import 'package:project_flutter_buyer/utility/dialog.dart';
 import 'package:project_flutter_buyer/utility/my_constant.dart';
 import 'package:project_flutter_buyer/utility/show_image.dart';
@@ -20,8 +25,8 @@ class _UserFormState extends State<UserForm> {
   final formKey = GlobalKey<FormState>();
   TextEditingController _dobController = TextEditingController();
   File? file;
-  dynamic gender;
-  late String name;
+  dynamic gender, urlPicture;
+  late String name, phonnumber;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +99,7 @@ class _UserFormState extends State<UserForm> {
                               if (value!.isEmpty) {
                                 return 'กรุณาระบุ Name ของคุณ';
                               } else {}
+                              return null;
                             },
                             decoration: InputDecoration(
                               labelStyle: Myconstant().h3style(),
@@ -122,11 +128,12 @@ class _UserFormState extends State<UserForm> {
                           margin: const EdgeInsets.only(top: 16),
                           width: MediaQuery.of(context).size.width * 0.6,
                           child: TextFormField(
-                            onChanged: (value) => name = value.trim(),
+                            onChanged: (value) => phonnumber = value.trim(),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'กรุณาระบุ Name ของคุณ';
+                                return 'กรุณากรอกหมายเลขโทรศัพท์ ของคุณ';
                               } else {}
+                              return null;
                             },
                             decoration: InputDecoration(
                               labelStyle: Myconstant().h3style(),
@@ -182,12 +189,13 @@ class _UserFormState extends State<UserForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 22),
+                          margin: const EdgeInsets.symmetric(vertical: 22),
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: ElevatedButton(
                             style: Myconstant().myButtonStyle(),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
+                                sendUserDataToDB();
                               } else {
                                 normalDialog(
                                     context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
@@ -280,5 +288,36 @@ class _UserFormState extends State<UserForm> {
         _dobController.text = "${picked.day}/ ${picked.month}/ ${picked.year}";
       });
     }
+  }
+
+  sendUserDataToDB() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = _auth.currentUser;
+
+    Random random = Random();
+    int i = random.nextInt(10000);
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+    Reference storageReference = firebaseStorage.ref().child('User/user$i.png');
+    UploadTask storageUploadTask = storageReference.putFile(file!);
+
+    await storageUploadTask.whenComplete(() async {
+      urlPicture = await storageUploadTask.snapshot.ref.getDownloadURL();
+    });
+    print('URL is = $urlPicture');
+
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("User");
+    return _collectionRef
+        .doc(currentUser!.email)
+        .set({
+          "name": name,
+          "phone": phonnumber,
+          "dob": _dobController.text,
+          "gender": gender,
+          "image": urlPicture,
+        })
+        .then((value) => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const MainScreen())))
+        .catchError((error) => print("something is wrong. $error"));
   }
 }

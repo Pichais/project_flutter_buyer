@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, avoid_print
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,28 +26,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   signUp() async {
     Navigator.push(
         context, CupertinoPageRoute(builder: (_) => const UserForm()));
-    // try {
-    //   UserCredential userCredential = await FirebaseAuth.instance
-    //       .createUserWithEmailAndPassword(
-    //           email: _emailController.text, password: _passwordController.text);
-    //   var authCredential = userCredential.user;
-    //   print(authCredential!.uid);
-    //   if (authCredential.uid.isNotEmpty) {
-    //     Navigator.push(
-    //         context, CupertinoPageRoute(builder: (_) => const UserForm()));
-    //   } else {
-    //     Fluttertoast.showToast(msg: "Something is wrong");
-    //   }
-    // } on FirebaseAuthException catch (e) {
-    //   if (e.code == 'weak-password') {
-    //     Fluttertoast.showToast(msg: "The password provided is too weak.");
-    //   } else if (e.code == 'email-already-in-use') {
-    //     Fluttertoast.showToast(
-    //         msg: "The account already exists for that email.");
-    //   }
-    // } catch (e) {
-    //   print(e);
-    // }
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text, password: _passwordController.text);
+      var authCredential = userCredential.user;
+      print(authCredential!.uid);
+      if (authCredential.uid.isNotEmpty) {
+        Navigator.push(
+            context, CupertinoPageRoute(builder: (_) => const UserForm()));
+      } else {
+        Fluttertoast.showToast(msg: "Something is wrong");
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        Fluttertoast.showToast(msg: "The password provided is too weak.");
+      } else if (e.code == 'email-already-in-use') {
+        Fluttertoast.showToast(
+            msg: "The account already exists for that email.");
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -111,11 +111,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 20,
                           ),
                           const Text(
-                            "Farm Mart SUT",
+                            "Create your account",
                             style: TextStyle(fontSize: 22),
                           ),
                           const Text(
-                            "Welcome to create your account.",
+                            "Welcome to Farm Mart SUT ",
                             style: TextStyle(
                               fontSize: 14,
                               color: Color(0xFFBBBBBB),

@@ -1,10 +1,13 @@
 // ignore_for_file: unrelated_type_equality_checks, await_only_futures, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter_buyer/models/order_model.dart';
 import 'package:project_flutter_buyer/models/product_model.dart';
 import 'package:project_flutter_buyer/page/product/show_detail_product/show_detail_product.dart';
+import 'package:project_flutter_buyer/routes/route.dart';
 import 'package:project_flutter_buyer/utility/my_constant.dart';
 
 class ShowProduct extends StatefulWidget {
@@ -16,6 +19,7 @@ class ShowProduct extends StatefulWidget {
 
 class _ShowProductState extends State<ShowProduct> {
   List<ProductModel> productModels = [];
+  int amounts = 0;
 
   @override
   void initState() {
@@ -55,13 +59,30 @@ class _ShowProductState extends State<ShowProduct> {
       body: ListView.builder(
           itemCount: productModels.length,
           itemBuilder: (context, index) {
+            dynamic name, price, image, detail, stock, idproduct;
+            idproduct = productModels[index].id;
+            name = productModels[index].name;
+            price = productModels[index].price;
+            image = productModels[index].pathimage;
+            detail = productModels[index].detail;
+            stock = productModels[index].stock;
             return Card(
               child: InkWell(
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ShowdetailProduct()));
+                          builder: (context) => ShowdetailProduct(
+                                name: name,
+                                price: price,
+                                detail: detail,
+                                image: image,
+                                docsID: idproduct,
+                                stock: stock,
+                                callback: () {
+                                  readAllData();
+                                },
+                              )));
                 },
                 child: Row(
                   children: [
@@ -70,7 +91,7 @@ class _ShowProductState extends State<ShowProduct> {
                       height: 120,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                        image: NetworkImage(productModels[index].pathimage),
+                        image: NetworkImage(image),
                       )),
                     ),
                     const Padding(padding: EdgeInsets.all(22)),
@@ -84,7 +105,7 @@ class _ShowProductState extends State<ShowProduct> {
                             child: Text("${productModels[index].name}"),
                           ),
                           const Padding(padding: EdgeInsets.all(6)),
-                          Text(productModels[index].detail,
+                          Text(detail,
                               style: const TextStyle(
                                   color: Color.fromARGB(162, 117, 117, 117)),
                               overflow: TextOverflow.ellipsis),
@@ -105,7 +126,17 @@ class _ShowProductState extends State<ShowProduct> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ShowdetailProduct()));
+                                                ShowdetailProduct(
+                                                  name: name,
+                                                  price: price,
+                                                  detail: detail,
+                                                  image: image,
+                                                  docsID: idproduct,
+                                                  stock: stock,
+                                                  callback: () {
+                                                    readAllData();
+                                                  },
+                                                )));
                                   },
                                   icon: const Icon(
                                     Icons.add_circle_outline_outlined,
